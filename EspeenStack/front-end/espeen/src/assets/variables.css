@@ -1,0 +1,48 @@
+/*
+    Author:
+    >> dragusheen - { dragusheen.epitech@gmail.com }
+
+    („• ֊ •„)❤
+    ┏━U━━━U━━━━━━━━━━━━━━┓
+    ┃ Have a good day ! ┃
+    ┗━━━━━━━━━━━━━━━━━━━┛
+*/
+
+/* color palette */
+:root {
+    --color-green: #50C878;
+    --color-dark: #36454F;
+    --color-light: #f7f7f7;
+    --color-absolute-dark: #36454F;
+    --color-absolute-light: #f7f7f7;
+}
+
+body.default {
+    --color-green: #50C878;
+}
+
+body.protanopia {
+    --color-green: #6DBF68;
+}
+
+body.deuteranopia {
+    --color-green: #72C57B;
+}
+
+body.tritanopia {
+    --color-green: #60C9AB;
+}
+
+body.achromatopsia {
+    --color-green: #A5A5A5;
+}
+
+body.light-theme {
+    --color-dark: #36454F;
+    --color-light: #f7f7f7;
+}
+
+body.dark-theme {
+    --color-dark: #f7f7f7;
+    --color-light: #36454F;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emerald & Colorblind-Friendly Themes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="emerald light">
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="selectors">
+            <select id="theme-select">
+                <option value="light">Light Mode</option>
+                <option value="dark">Dark Mode</option>
+            </select>
+
+            <select id="colorblind-select">
+                <option value="emerald">Default Theme</option>
+                <option value="protanopia">Protanopia-Friendly</option>
+                <option value="deuteranopia">Deuteranopia-Friendly</option>
+                <option value="tritanopia">Tritanopia-Friendly</option>
+                <option value="achromatopsia">Achromatopsia-Friendly</option>
+            </select>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="title">Welcome to the Accessible Emerald Themed Website</h1>
+        <p class="text">This is a sample paragraph demonstrating the default and colorblind-friendly themes styled in both light and dark modes.</p>
+    </main>
+
+    <script>
+        const themeSelect = document.getElementById('theme-select');
+        const colorblindSelect = document.getElementById('colorblind-select');
+
+        themeSelect.addEventListener('change', function() {
+            document.body.classList.toggle('dark', this.value === 'dark');
+            document.body.classList.toggle('light', this.value === 'light');
+        });
+
+        colorblindSelect.addEventListener('change', function() {
+            document.body.className = `${this.value} ${themeSelect.value}`;
+        });
+    </script>
+</body>
+</html>

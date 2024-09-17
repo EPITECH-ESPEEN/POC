@@ -1,0 +1,177 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #50C878; /* Default Emerald Green */
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar select {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.selectors {
+    display: flex;
+    gap: 10px;
+}
+
+/* Main Content */
+main {
+    padding: 40px;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Light Mode */
+body.light {
+    background-color: #F7F7F7; /* Light Gray */
+    color: #333; /* Dark Gray */
+}
+
+body.light .navbar {
+    background-color: #50C878; /* Emerald Green */
+}
+
+body.light .title {
+    color: #50C878; /* Emerald Green */
+}
+
+body.light .text {
+    color: #333333; /* Dark Gray */
+}
+
+/* Dark Mode */
+body.dark {
+    background-color: #36454F; /* Dark Slate Gray */
+    color: #EAEAEA; /* Very Light Gray */
+}
+
+body.dark .navbar {
+    background-color: #4DAF7F; /* Lightened Deep Emerald */
+}
+
+body.dark .title {
+    color: #8EE1B1; /* Lightened Mint Green */
+}
+
+body.dark .text {
+    color: #EAEAEA; /* Very Light Gray */
+}
+
+/* Default Emerald Theme */
+body.emerald.light .navbar {
+    background-color: #50C878;
+}
+
+body.emerald.dark .navbar {
+    background-color: #4DAF7F;
+}
+
+body.emerald.light .title {
+    color: #50C878;
+}
+
+body.emerald.dark .title {
+    color: #8EE1B1;
+}
+
+/* Protanopia-Friendly Palette */
+body.protanopia.light .navbar {
+    background-color: #6DBF68;
+}
+
+body.protanopia.dark .navbar {
+    background-color: #549D53;
+}
+
+body.protanopia.light .title {
+    color: #6DBF68;
+}
+
+body.protanopia.dark .title {
+    color: #96D98D;
+}
+
+/* Deuteranopia-Friendly Palette */
+body.deuteranopia.light .navbar {
+    background-color: #72C57B;
+}
+
+body.deuteranopia.dark .navbar {
+    background-color: #599D65;
+}
+
+body.deuteranopia.light .title {
+    color: #72C57B;
+}
+
+body.deuteranopia.dark .title {
+    color: #A0DBA2;
+}
+
+/* Tritanopia-Friendly Palette */
+body.tritanopia.light .navbar {
+    background-color: #60C9AB;
+}
+
+body.tritanopia.dark .navbar {
+    background-color: #48A18B;
+}
+
+body.tritanopia.light .title {
+    color: #60C9AB;
+}
+
+body.tritanopia.dark .title {
+    color: #88DEC1;
+}
+
+/* Achromatopsia-Friendly Palette */
+body.achromatopsia.light .navbar {
+    background-color: #A5A5A5;
+}
+
+body.achromatopsia.dark .navbar {
+    background-color: #828282;
+}
+
+body.achromatopsia.light .title {
+    color: #A5A5A5;
+}
+
+body.achromatopsia.dark .title {
+    color: #CFCFCF;
+}
