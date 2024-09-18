@@ -1,0 +1,127 @@
+#!/usr/bin/python3
+
+from Crypto.Cipher import AES
+from getpass import getpass
+from hashlib import md5
+from base64 import b64encode, b64decode
+from tempfile import NamedTemporaryFile
+
+from pickle import loads as ploads, dumps as pdumps
+from json import loads as jloads, dumps as jdumps
+
+import hashlib
+import sys
+import os
+
+display = lambda *args, **kwargs: print(*args, file=sys.stderr, **{k: v for k, v in kwargs.items() if k != 'file'})
+
+def encrypt(data: bytes, key: bytes) -> bytes:
+    hashed = md5(key).hexdigest()
+    k1 = hashed[:16]
+    k2 = hashed[16:]
+    obj = AES.new(k1.encode(), AES.MODE_CBC, k2.encode())
+
+    data = b64encode(data)
+    while len(data) % 16:
+        data += b'*'
+
+    return obj.encrypt(data)
+
+def decrypt(data: bytes, key: bytes) -> bytes:
+    hashed = md5(key).hexdigest()
+    k1 = hashed[:16]
+    k2 = hashed[16:]
+    obj = AES.new(k1.encode(), AES.MODE_CBC, k2.encode())
+    data = obj.decrypt(data)
+    if not len(data):
+        return data
+    while data[-1] == 42:
+        data = data[:-1]
+    return b64decode(data)
+
+def main(fname: str, args: list[str]) -> int:
+    if (not len(args)) or (not os.path.isfile(args[0])) or "-h" in args or "--help" in args:
+        display(f"Usage: {fname} <env_file.aes> [options]")
+        display()
+        display(f"\t-h | --help             : Display that help and exit")
+        display(f"\t-n | --no-random        : Do not interprete \"$RAND\".")
+        display(f"\t-e | --editor <command> : Use that command as editor (run with a file as argument)")
+        display(f"\t-o | --output <file>    : Don't update self, and save into file")
+        sys.exit(1)
+    source = args[0]
+    output = source
+    editor = os.getenv("EDITOR")
+    random = True
+
+    i = 1
+    while i < len(args):
+        if (args[i] == "-n" or args[i] == "--no-random"):
+            random = False
+        elif (args[i] == "-o" or args[i] == "--output"):
+            i += 1
+            if i >= len(args):
+                display("-o | --output require an argument !")
+                sys.exit(1)
+            if args[i].startswith('-'):
+                display("-o | --output argument must not starts with \"-\" !")
+                sys.exit(1)
+            output = args[i]
+        elif (args[i] == "-e" or args[i] == "--editor"):
+            i += 1
+            if i >= len(args):
+                display("-e | --editor require an argument !")
+                sys.exit(1)
+            if args[i].startswith('-'):
+                display("-e | --editor argument must not starts with \"-\" !")
+                sys.exit(1)
+            editor = args[i]
+        else:
+            display(f"Argument \"{args[i]}\" not recognised.")
+            sys.exit(1)
+        i += 1
+
+    password = os.getenv("ENV_PASSWORD")
+    if not password:
+        password = getpass("Password: ")
+
+    password = password.encode()
+
+    with open(source, 'r') as f:
+        data = decrypt(b64decode(f.read()), password)
+
+    try:
+        data = ploads(data)
+    except:
+        display("Could not deserialize. Wrong password ?")
+        sys.exit(1)
+
+    tf = NamedTemporaryFile(delete=False)
+    tf.write(jdumps(data, indent=4).encode())
+    tf.close()
+    name = tf.name
+
+    os.system(f"{editor} {name}")
+
+    with open(name, 'rb') as f:
+        data = jloads(f.read())
+
+    os.remove(name)
+
+    if type(data) != dict:
+        display(f"Expecting data of type dict, but got {type(data)}")
+        sys.exit(1)
+
+    if random:
+        for k, v in data.items():
+            if v == "$RAND":
+                data[k] = hashlib.sha256(os.urandom(16)).hexdigest()
+
+    data = b64encode(encrypt(pdumps(data), password))
+
+    data = b'\n'.join([data[i:i+70] for i in range(0, len(data), 70)])
+
+    with open(output, 'wb+') as f:
+        f.write(data)
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[0], sys.argv[1:]))

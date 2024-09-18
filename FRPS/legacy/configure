@@ -1,0 +1,11 @@
+#!/bin/bash
+
+status=$1
+
+if [[ "$status" == "dev" ]]; then
+    echo "Status is dev"
+elif [[ "$status" == "prod" ]]; then
+    echo "Status is prod"
+else
+    echo "unknown status"
+fi

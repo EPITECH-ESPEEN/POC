@@ -1,4 +1,4 @@
-# AREA POC
+# AREA POC - Stack FRPS
 
 ## Introduction
 
@@ -21,10 +21,10 @@ This project is a proof of concept (POC) for the AREA project. It utilizes the F
 - **Description:** A high-level, interpreted programming language known for its readability and simplicity. It supports various programming paradigms and has a rich ecosystem of libraries and frameworks.
 - **Purpose in Project:** Python is used for server-side scripting and integrating with Flask to handle backend logic, data processing, and API management.
 
-### SQL Database
+### MySQL
 
-- **Description:** A relational database management system that uses Structured Query Language (SQL) for managing and querying data. Examples include PostgreSQL, MySQL, and SQLite.
-- **Purpose in Project:** The SQL database is used to store and manage structured data with support for complex queries, relationships, and transactions.
+- **Description:** A relational database management system that uses Structured Query Language (SQL) for managing and querying data.
+- **Purpose in Project:** MySQL is used to store and manage structured data with support for complex queries, relationships, and transactions.
 
 ## Advantages
 
@@ -60,21 +60,17 @@ Flask, Python, and SQL databases each come with their own set of concepts and pr
 
 ### b. Complexity in Integration
 
-While the FRPS stack offers flexibility, integrating Flask, React.js, Python, and a SQL database can introduce complexity. Ensuring smooth communication between these components requires careful configuration and management.
+While the FRPS stack offers flexibility, integrating Flask, React.js, Python, and MySQL can introduce complexity. Ensuring smooth communication between these components requires careful configuration and management.
 
 ### c. SQL Database Management
 
-Managing a SQL database involves dealing with schema design, migrations, and performance tuning. For complex applications, this can add to the development effort and require additional expertise.
+Managing a MySQL database involves dealing with schema design, migrations, and performance tuning. For complex applications, this can add to the development effort and require additional expertise.
 
 ### d. Real-Time Features
 
 React.js is well-suited for building interactive UIs, but implementing real-time features like live updates may require additional libraries or tools. Flask, being a synchronous framework, may also need extra configurations for real-time capabilities.
 
-### e. Server-Side Rendering (SSR) Challenges
-
-While Flask can handle server-side rendering (SSR), it may require additional setup and configuration compared to frameworks designed specifically for SSR. This can add to the development time and complexity.
-
-### f. Limited Built-in Features
+### e. Limited Built-in Features
 
 Flask is minimalistic by design, meaning it lacks many built-in features found in more comprehensive frameworks. This requires developers to implement or integrate additional tools for features like authentication, validation, and more.
 
@@ -83,4 +79,28 @@ Flask is minimalistic by design, meaning it lacks many built-in features found i
 - [Flask](https://flask.palletsprojects.com/)
 - [React.js](https://reactjs.org/)
 - [Python](https://www.python.org/)
-- [SQL Databases](https://www.mysql.com/ | https://www.postgresql.org/ | https://www.sqlite.org/)
+- [MySQL](https://www.mysql.com/)
+
+---
+
+# How to use
+
+## Run
+
+Running
+> `./shell`
+will check that all necessary dependencies are present and working.
+
+Once ran without errors, you will have a `.venv/` folder used by python's Virtual ENVironement manager.
+
+Here, you will have multiple commands available :
+
+- `edit_env <environement_file.aes>`: Let's you edit an AES encrypted environement file. The `ENV_PASSWORD` environement variable will used as password, if set.
+- `run_dev <environement_file.aes>`: Run the server with the provided environement file. The `ENV_PASSWORD` environement variable will used as password, if set.
+- `exit`: Will quit the shell, and remove all the temp files, data base values... (Note: This will also deactivate the env shell, and remove the .venv folder)
+
+For any question regarding the environement, and how it works, please take a look at the `ENV.md` file.
+
+Note: Running again the project will **not** clear the data. This is volontary, as it will allow you to restart the server while not clearing previous data.
+
+Note: Removing `./data/` will remove all data present on the website (users, any images...)
