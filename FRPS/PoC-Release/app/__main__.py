@@ -22,8 +22,9 @@ PORT = int(PORT)
 
 app = create_app()
 
+print(dir(app))
+
 watch_file = []
-watch_file.extend(glob.glob("./app/templates/**/*", recursive=True))
-watch_file.extend(glob.glob("./app/static/**/*", recursive=True))
+watch_file.extend(glob.glob("./app/**/*", recursive=True))
 
 app.run(host=HOST, port=PORT, debug=True, extra_files=watch_file)

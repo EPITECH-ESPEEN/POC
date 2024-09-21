@@ -1,0 +1,92 @@
+#!/usr/bin/python3
+
+from Crypto.Cipher import AES
+from getpass import getpass
+from hashlib import md5
+from base64 import b64encode, b64decode
+from tempfile import NamedTemporaryFile
+
+from pickle import loads as ploads, dumps as pdumps
+from json import loads as jloads, dumps as jdumps
+
+import hashlib
+import sys
+import os
+
+display = lambda *args, **kwargs: print(*args, file=sys.stderr, **{k: v for k, v in kwargs.items() if k != 'file'})
+
+def encrypt(data: bytes, key: bytes) -> bytes:
+    hashed = md5(key).hexdigest()
+    k1 = hashed[:16]
+    k2 = hashed[16:]
+    obj = AES.new(k1.encode(), AES.MODE_CBC, k2.encode())
+
+    data = b64encode(data)
+    while len(data) % 16:
+        data += b'*'
+
+    return obj.encrypt(data)
+
+def decrypt(data: bytes, key: bytes) -> bytes:
+    hashed = md5(key).hexdigest()
+    k1 = hashed[:16]
+    k2 = hashed[16:]
+    obj = AES.new(k1.encode(), AES.MODE_CBC, k2.encode())
+    data = obj.decrypt(data)
+    if not len(data):
+        return data
+    while data[-1] == 42:
+        data = data[:-1]
+    return b64decode(data)
+
+def main(fname: str, args: list[str]) -> int:
+    if not len(args):
+        display(f"Usage: {fname} [encrypted file]")
+        sys.exit(1)
+    password = os.getenv("ENV_PASSWORD")
+    if not password:
+        password = getpass("Password: ")
+
+    password = password.encode()
+
+    with open(args[0], 'r') as f:
+        data = decrypt(b64decode(f.read().replace('\n', '')), password)
+
+    try:
+        data = ploads(data)
+    except:
+        display("Could not deserialize. Wrong password ?")
+        sys.exit(1)
+
+    for k in data.keys():
+        for key in data.keys():
+            data[k] = str(data[k]).replace(f"${key}", str(data[key])).replace("$RAND", hashlib.sha512(os.urandom(16)).hexdigest())
+            while f"?({key}" in data[k]:
+                pos = data[k].index(f"?({key}")
+                if not ')' in data[k][pos:]:
+                    print(f"Could not evaluate logic string at pos {pos}: missing closing )", file=sys.stderr)
+                    sys.exit(1)
+                values = data[k][pos:].split(')')[0]
+                values = '('.join(values.split('(')[1:])
+                values = values.split(':')
+                if len(values) != 3:
+                    print(f"Could not evaluate logic string at pos {pos}: found {len(values)} part instead of 3 (separated by ':')", file=sys.stderr)
+                    sys.exit(1)
+                condition = values[0].split('=')
+                if len(condition) != 2:
+                    print(f"Could not evaluate logic string at pos {pos}: condition have {len(condition) - 1} '=' instead of 1", file=sys.stderr)
+                    sys.exit(1)
+                if not condition[0] in data.keys():
+                    print(f"Could not evaluate logic string at pos {pos}: {condition[0]}: unknown value", file=sys.stderr)
+                    sys.exit(1)
+                closing_pos = pos + data[k][pos:].index(')') + 1
+                value = values[1]
+                if str(data[condition[0]]) != condition[1]:
+                    value = values[2]
+                if value in data.keys():
+                    value = data[value]
+                data[k] = data[k][:pos] + value + data[k][closing_pos:]
+        print(f"{k}={data[k]}")
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[0], sys.argv[1:]))

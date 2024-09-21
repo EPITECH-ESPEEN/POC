@@ -1,0 +1,74 @@
+x-env: &default-env
+  env_file:
+    - path: ./.env
+      required: true
+
+services:
+  db:
+    image: mysql:9.0.1
+    <<: *default-env
+    container_name: area-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: # ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    networks:
+      area:
+        ipv4_address: ${DB_HOST}
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./data/:/var/lib/mysql"
+
+  backend:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile-backend-dev
+    <<: *default-env
+    container_name: area-backend
+    restart: unless-stopped
+    environment:
+      FLASK_RUN_HOST: "0.0.0.0"
+      FLASK_RUN_PORT: ${BACK_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      - ./:/app/:rw
+    networks:
+      area:
+        ipv4_address: ${BACK_HOST}
+    ports:
+      - "${BACK_PORT}:${BACK_PORT}"
+    depends_on:
+      - db
+
+  # frontend:
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: ./docker/Dockerfile-frontend-dev
+  #   image: area-frontend
+  #   <<: *default-env
+  #   container_name: area-frontend
+  #   restart: always
+  #   environment:
+  #     PORT: ${FRONT_PORT}
+  #     BACK_PORT: ${BACK_PORT}
+  #   networks:
+  #     area:
+  #       ipv4_address: ${FRONT_HOST}
+  #   ports:
+  #     - "${FRONT_PORT}:${FRONT_PORT}"
+  #   depends_on:
+  #     - db
+  #     - backend
+
+networks:
+  area:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET}
+          gateway: ${NETWORK_GATEWAY}

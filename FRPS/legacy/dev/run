@@ -1,3 +1,0 @@
-#!/bin/bash
-
-find /app/ -type f | entr bash -c "cd /app/ && python3 /app/app.py"

@@ -1,0 +1,11 @@
+How to use :
+
+Create a virtual environement: python3 -m venv .venv
+
+Activate that environement: source ./.venv/bin/activate
+
+Install requirements: pip3 install -r requirements.txt
+
+If you are missing the flask_sqlalchemy pip module, install it via system packages (i.e. sudo apt-get install -y python3-sqlalchemy)
+
+Run the app: flask run [--host HOST] [--port PORT] [--debug | --no-debug]

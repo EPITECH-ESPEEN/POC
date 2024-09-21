@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="notification is-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% if not current_user.nasa_token %}
+<div class="column is-4 is-offset-4">
+<h3 class="title">Register your API</h3>
+    <div class="box">
+        <form method="POST" action="/register_api">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="key" placeholder="Your Nasa API Key" maxlength="40" autofocus="">
+                </div>
+            </div>
+            <a href="https://api.nasa.gov/">Get your NASA API Key Now !</a>
+
+            <button class="button is-block is-info is-large is-fullwidth">Register API Key</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% if current_user.nasa_token %}
+<p style="color: black;">
+    {{ apod_data }}
+</p>
+<img src="{{ apod_url }}" alt="{{ apod_title }}">
+{% endif %}
+{% endblock %}

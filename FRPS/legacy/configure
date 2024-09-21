@@ -1,11 +1,100 @@
 #!/bin/bash
 
+clear
+echo "╭────────────────────────────────────────────────╮"
+echo "│  ▗▄▄▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▄▄▄▖ ▗▄▄▖▗▖ ▗▖▗▄▄▖ ▗▄▄▄▖ │"
+echo "│ ▐▌   ▐▌ ▐▌▐▛▚▖▐▌▐▌     █  ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌    │"
+echo "│ ▐▌   ▐▌ ▐▌▐▌ ▝▜▌▐▛▀▀▘  █  ▐▌▝▜▌▐▌ ▐▌▐▛▀▚▖▐▛▀▀▘ │"
+echo "│ ▝▚▄▄▖▝▚▄▞▘▐▌  ▐▌▐▌   ▗▄█▄▖▝▚▄▞▘▝▚▄▞▘▐▌ ▐▌▐▙▄▄▖ │"
+echo "╰────────────────────────────────────────────────╯"
+echo
+echo "[+] Welcome to the configure script."
+echo
+
 status=$1
+verbose=false
+prod=false
+
+PYTHON=python
+
+SUDO=""
+
+DC_COMMAND="docker-compose"
 
 if [[ "$status" == "dev" ]]; then
-    echo "Status is dev"
+    echo "[+] Starting developpement configuration."
+    echo "[+] Note: This also enable verbose configuration."
+    verbose=true
 elif [[ "$status" == "prod" ]]; then
-    echo "Status is prod"
+    echo "[+] Starting production configuration."
+    prod=true
 else
-    echo "unknown status"
+    echo "[?] Status \"$status\" unkown."
+    echo "[+] Usage: $0 [prod|dev]"
+    exit 1
+fi
+
+if ! command -v "$PYTHON" &>/dev/null; then
+    PYTHON=python3
+fi
+
+if ! command -v "$PYTHON" &>/dev/null; then
+    PYTHON=py
+fi
+
+if ! command -v "$PYTHON" &>/dev/null; then
+    PYTHON=py3
+fi
+
+if ! command -v "$PYTHON" &>/dev/null; then
+    echo "[!] Could not locate Python command (tried python, python3, py and py3)."
+    echo "[!] Please install Python and retry."
+    exit 1
+fi
+
+if ! $PYTHON -c "import Crypto" ; then
+    echo "[!] Python module \"pycryptodome\" not found, installing now..."
+    if ! $PYTHON -m pip install pycryptodome ; then
+        echo "[!] Failed to install python module pycryptodome."
+        echo "[!] Please install it manually and retry."
+        exit 1
+    fi
+fi
+
+if [ $(test -r /var/run/docker.sock; echo "$?") -ne 0 ]; then
+    SUDO="sudo"
+fi
+
+if ! command -v $DC_COMMAND &> /dev/null; then
+    DC_COMMAND="docker compose"
+fi
+
+if $verbose ; then
+    echo "[+] First things first, let's remove previous containers / images"
+fi
+
+$SUDO $DC_COMMAND down 2>/dev/null
+$SUDO docker stop area-db area-backend area-frontend 2>/dev/null
+$SUDO docker rm   area-db area-backend area-frontend 2>/dev/null
+
+if $verbose ; then
+    echo "[+] Extracting the environement from AES encrypted file."
+fi
+
+if $prod ; then
+    $PYTHON ./env/read_env ./env/.env-prod.aes > ./.env
+else
+    $PYTHON ./env/read_env ./env/.env-dev.aes > ./.env
+fi
+
+export $(cat .env | xargs)
+
+if $verbose ; then
+    echo "[+] Configuring the docker-compose.yaml file"
+fi
+
+if $prod ; then
+    cp ./docker/docker-compose-prod.yaml ./docker-compose.yaml
+else
+    cp ./docker/docker-compose-dev.yaml ./docker-compose.yaml
 fi
