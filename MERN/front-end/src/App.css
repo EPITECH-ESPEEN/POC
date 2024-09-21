@@ -1,3 +1,42 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Base Styles */
 body {
   font-family: Arial, sans-serif;
@@ -174,4 +213,93 @@ body.achromatopsia.light .title {
 
 body.achromatopsia.dark .title {
   color: #CFCFCF;
+}
+
+/* Loader */
+.loader {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20%;
+  width: 80px;
+  height: 80px;
+  padding-left: 0;
+}
+.loader:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #f0efeb;
+  border-color: #f0efeb transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Login page */
+
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_card{
+  margin-top: 150px;
+  padding: 30px;
+  border-radius: 0.2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 500px;
+}
+
+.login_button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px; 
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login_button:hover {
+  background-color: #5a6268;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+
+#login_btn,
+#logout_btn,
+#view_btn,
+#new_review_btn {
+  background-color: #ffffff;
+  padding: 0.4rem 1.8rem;
+  color: rgb(0, 0, 0);
+}
+
+#cart {
+  font-size: 1rem;
+  color: white;
+}
+
+#cart_count {
+  background-color: #f0efeb;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.2rem;
+  color: black;
+  font-weight: bold;
+  font-size: 0.9rem;
 }

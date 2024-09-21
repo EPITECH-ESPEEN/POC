@@ -1,42 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import './App.css';
-import Home from "./components/Home.jsx"
-import Login from "./components/auth/Login.jsx"
-import UsersPage from "./components/users/UsersPage.jsx"
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import './App.css'
+
+import Home from "./components/Home";
+import Login from "./components/auth/Login";
+import Header from "./components/layout/Header";
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Toaster position="top-center" />
-        <div className="container">
+        <Toaster position="top-right" />
+        <Header />
+        <div className="pages">
           <Routes>
-            <Route path="/login" element={<Login />} />
 
-            <Route
-              path="/"
-              element={
-                  <Home />
-              }
-            />
-{/* 
-            <Route
-              path="/users"
-              element={
-                <ProtectedRoute>
-                  <UsersPage />
-                </ProtectedRoute>
-              }
-            /> */}
+          <Route path="/" element={<Home />} />
+
+          <Route path="/login" element={<Login />} />
+
           </Routes>
         </div>
 
       </div>
     </Router>
   );
-};
+}
 
 export default App;
