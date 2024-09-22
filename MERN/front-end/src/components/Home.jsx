@@ -2,24 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import MetaData from "./layout/MetaData";
-import Loader from "./layout/Loader";
-import { useGetUsersQuery } from "../redux/api/userApi";
-// import { useGetProfileQuery } from "../redux/api/userApi";
+import CurrentWeather from "./services/CurrentWeather";
 
 const Home = () => {
     const [theme, setTheme] = useState('light');
     const [colorblindMode, setColorblindMode] = useState('emerald');
-
-    const { data, isLoading } = useGetUsersQuery();
-
     const { user } = useSelector((state) => state.auth);
 
     useEffect(() => {
         document.body.classList.add(theme);
         document.body.classList.add(colorblindMode);
     }, [theme, colorblindMode]);
-
-    if (isLoading) return <Loader />;
 
     const handleThemeChange = (e) => {
         setTheme(e.target.value);
@@ -60,8 +53,13 @@ const Home = () => {
                 <p className="text">This is a sample paragraph demonstrating the default and colorblind-friendly themes styled in both light and dark modes.</p>
             </main>
 
-            <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
-                
+            <div className="text-center">
+                {user?.name ? (
+                    <CurrentWeather />
+                ) : (
+                    <p className="text"><strong>Login to check the current weather in your city</strong></p>
+                )}
+
             </div>
 
         </div>

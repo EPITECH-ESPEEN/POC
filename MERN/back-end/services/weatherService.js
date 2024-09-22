@@ -1,20 +1,14 @@
-// services/weatherService.js
-const axios = require('axios');
+import axios from "axios";
+import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 
-class WeatherService {
-  constructor(config) {
-    this.config = config;
+export const getCurrentWeather = catchAsyncErrors(async(req, res, next) => {
+  try {
+    const city = req.params.city;
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=f99fcdef37b5d1aba02e07f3d4b315f8`;
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des données météorologiques' });
   }
+});
 
-  async getCurrentWeather(city) {
-    try {
-      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.config.apiKey}`);
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données météorologiques:', error);
-      throw error;
-    }
-  }
-}
-
-module.exports = WeatherService;
