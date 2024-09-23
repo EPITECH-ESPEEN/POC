@@ -1,8 +1,8 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import User from "../models/userModel.js";
-import ErrorHandler from "../utils/errorHandler.js"
+// import ErrorHandler from "../utils/errorHandler.js"
 
-// Register user : /api/register
+// Get all users : /api/users
 export const getUsers = catchAsyncErrors(async(req, res, next) => {
 
     const users = await User.find();
@@ -11,3 +11,4 @@ export const getUsers = catchAsyncErrors(async(req, res, next) => {
         users,
     });
 });
+
