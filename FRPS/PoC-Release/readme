@@ -1,5 +1,6 @@
 How to use :
 
+[DEPRECATED]
 Create a virtual environement: python3 -m venv .venv
 
 Activate that environement: source ./.venv/bin/activate
@@ -9,3 +10,63 @@ Install requirements: pip3 install -r requirements.txt
 If you are missing the flask_sqlalchemy pip module, install it via system packages (i.e. sudo apt-get install -y python3-sqlalchemy)
 
 Run the app: flask run [--host HOST] [--port PORT] [--debug | --no-debug]
+
+[NEWER]
+Latest commit let you run the app through docker :
+
+`docker build -t [image_name] .`
+`docker run -it --rm --network host -e SECRET_KEY=$RANDOM [image_name]`
+
+Pros n cons of this PoC :
+
+Pros :
+
+a. MVC Architecture
+
+The FRPS stack benefits from the Model-View-Controller (MVC) architecture, which provides a clear separation of concerns. Flask handles the backend logic (Model), Jinja manages the user interface (View), and the SQL database handles data management (Controller). This separation simplifies development and maintenance.
+
+b. Scalability
+
+Flask is known for its flexibility and scalability. Combined with a SQL database, it supports complex queries and data relationships, making it suitable for applications of various sizes. React.js enhances the front-end scalability by efficiently managing UI updates and interactions.
+
+c. Python Ecosystem
+
+Python’s extensive ecosystem of libraries and frameworks enhances development productivity. Libraries for data processing, machine learning, and more can be integrated with Flask, expanding the capabilities of the application.
+
+d. Strong Typing with SQL
+
+Using a SQL database provides strong typing and schema enforcement, which helps in maintaining data integrity and consistency. This is particularly useful for applications requiring structured data and complex relationships.
+
+e. Robust Community Support
+
+Flask, Jinja, and SQL databases each have strong communities that offer support, resources, and best practices. This active community support helps in solving issues and improving the development process.
+
+f. Flexibility
+
+The FRPS stack is flexible, allowing developers to choose specific tools and libraries that best fit their needs. Flask’s minimalistic nature means you can add only the components you need, avoiding unnecessary overhead.
+
+Cons :
+
+a. Learning Curve
+
+Flask, Python, and SQL databases each come with their own set of concepts and practices. For developers new to these technologies, there can be a steep learning curve, particularly when integrating them effectively.
+
+b. Complexity in Integration
+
+While the FRPS stack offers flexibility, integrating Flask, Jinja, Python, and a SQL database can introduce complexity. Ensuring smooth communication between these components requires careful configuration and management.
+
+c. SQL Database Management
+
+Managing a SQL database involves dealing with schema design, migrations, and performance tuning. For complex applications, this can add to the development effort and require additional expertise.
+
+d. Real-Time Features
+
+Jinja is well-suited for building interactive UIs, but implementing real-time features like live updates may require additional libraries or tools. Flask, being a synchronous framework, may also need extra configurations for real-time capabilities.
+
+e. Server-Side Rendering (SSR) Challenges
+
+While Flask can handle server-side rendering (SSR), it may require additional setup and configuration compared to frameworks designed specifically for SSR. This can add to the development time and complexity.
+
+f. Limited Built-in Features
+
+Flask is minimalistic by design, meaning it lacks many built-in features found in more comprehensive frameworks. This requires developers to implement or integrate additional tools for features like authentication, validation, and more.
